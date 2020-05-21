@@ -44,4 +44,8 @@ public class Locker {
   public boolean isPackageAvailable(Ticket ticket) {
     return storedPacks.containsKey(ticket.getPackageId());
   }
+
+  public int getAvailableSpace() {
+    return capacity - storedPacks.size();
+  }
 }
