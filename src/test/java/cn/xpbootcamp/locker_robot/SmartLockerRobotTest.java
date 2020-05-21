@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import cn.xpbootcamp.locker_robot.entity.Package;
 import cn.xpbootcamp.locker_robot.entity.Ticket;
 import cn.xpbootcamp.locker_robot.exception.AllLockersFullException;
+import cn.xpbootcamp.locker_robot.exception.TicketInvalidException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -114,6 +115,37 @@ public class SmartLockerRobotTest {
 
     // Assert
     assertEquals(pack, actualPack);
+  }
+
+  @Test
+  void should_get_the_right_package_when_get_package_given_have_the_same_available_spaces_before_storing() {
+    // Arrange
+    List<Locker> lockers = Arrays.asList(
+        createLocker(5, 3),
+        createLocker(5, 3),
+        createLocker(5, 3));
+    SmartLockerRobot smartLockerRobot = new SmartLockerRobot(lockers);
+    Package pack = new Package();
+    Ticket ticket = smartLockerRobot.store(pack);
+
+    // Act
+    Package actualPack = smartLockerRobot.get(ticket);
+
+    // Assert
+    assertEquals(pack, actualPack);
+  }
+
+  @Test
+  void should_throw_InvalidTicketException_when_get_package_given_ticket_is_fake() {
+    // Arrange
+    List<Locker> lockers = Arrays.asList(
+        createLocker(5, 3),
+        createLocker(5, 3),
+        createLocker(5, 3));
+    SmartLockerRobot smartLockerRobot = new SmartLockerRobot(lockers);
+
+    // Act, Assert
+    assertThrows(TicketInvalidException.class, () -> smartLockerRobot.get(new Ticket()));
   }
 
   private Locker createLocker(int capacity, int availableSpace) {
