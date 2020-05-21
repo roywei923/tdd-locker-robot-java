@@ -2,6 +2,7 @@ package cn.xpbootcamp.locker_robot;
 
 import cn.xpbootcamp.locker_robot.entity.Package;
 import cn.xpbootcamp.locker_robot.entity.Ticket;
+import cn.xpbootcamp.locker_robot.exception.AllLockersFullException;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -17,10 +18,14 @@ public class SmartLockerRobot {
 
   public Ticket store(Package pack) {
     Locker locker = lockers.peek();
-    if(!locker.isFull()) {
-      return locker.store(pack);
+    if(locker.isFull()) {
+      throw new AllLockersFullException();
     }
 
+    return locker.store(pack);
+  }
+
+  public Package get(Ticket ticket) {
     return null;
   }
 }

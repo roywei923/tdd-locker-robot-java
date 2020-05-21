@@ -1,5 +1,6 @@
 package cn.xpbootcamp.locker_robot;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -88,13 +89,31 @@ public class SmartLockerRobotTest {
   void should_throw_AllLockersFullException_when_store_package_given_all_lockers_are_full() {
     // Arrange
     List<Locker> lockers = Arrays.asList(
-        createLocker(3, 3),
-        createLocker(3, 3),
-        createLocker(3, 3));
+        createLocker(3, 0),
+        createLocker(3, 0),
+        createLocker(3, 0));
     SmartLockerRobot smartLockerRobot = new SmartLockerRobot(lockers);
 
     // Act, Assert
     assertThrows(AllLockersFullException.class, () -> smartLockerRobot.store(new Package()));
+  }
+
+  @Test
+  void should_get_the_right_package_when_get_package_given_ticket_is_valid() {
+    // Arrange
+    List<Locker> lockers = Arrays.asList(
+        createLocker(3, 1),
+        createLocker(3, 2),
+        createLocker(3, 3));
+    SmartLockerRobot smartLockerRobot = new SmartLockerRobot(lockers);
+    Package pack = new Package();
+    Ticket ticket = smartLockerRobot.store(pack);
+
+    // Act
+    Package actualPack = smartLockerRobot.get(ticket);
+
+    // Assert
+    assertEquals(pack, actualPack);
   }
 
   private Locker createLocker(int capacity, int availableSpace) {
