@@ -3,6 +3,7 @@ package cn.xpbootcamp.locker_robot;
 import cn.xpbootcamp.locker_robot.entity.Package;
 import cn.xpbootcamp.locker_robot.entity.Ticket;
 import cn.xpbootcamp.locker_robot.exception.AllLockersFullException;
+import cn.xpbootcamp.locker_robot.exception.TicketInvalidException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -34,6 +35,13 @@ public class SmartLockerRobot {
   }
 
   public Package get(Ticket ticket) {
-    return packageLockerMapping.get(ticket.getPackageId()).get(ticket);
+    if(!packageLockerMapping.containsKey(ticket.getPackageId())) {
+      throw new TicketInvalidException();
+    }
+
+    Package pack = packageLockerMapping.get(ticket.getPackageId()).get(ticket);
+    packageLockerMapping.remove(ticket.getPackageId());
+
+    return pack;
   }
 }
