@@ -34,6 +34,16 @@ public class SuperLockerRobot {
     return ticket;
   }
 
+  public Package get(Ticket ticket) {
+    Locker locker = packageLockerMapping.get(ticket.getPackageId());
+    packageLockerMapping.remove(ticket.getPackageId());
+    lockers.remove(locker);
+    Package pack = locker.get(ticket);
+    lockers.offer(locker);
+
+    return pack;
+  }
+
   private double calculateVacancyPercentage(Locker locker) {
     return locker.getAvailableSpace() * 100.0 / locker.getCapacity();
   }

@@ -69,6 +69,37 @@ public class SuperLockerRobotTest {
     assertTrue(lockers.get(1).isPackageAvailable(ticket) || lockers.get(2).isPackageAvailable(ticket));
   }
 
+  @Test
+  void should_throw_AllLockersFullException_when_store_package_given_all_lockers_are_full() {
+    // Arrange
+    List<Locker> lockers = Arrays.asList(
+        createLocker(3, 0),
+        createLocker(3, 0),
+        createLocker(3, 0));
+    SuperLockerRobot superLockerRobot = new SuperLockerRobot(lockers);
+
+    // Act, Assert
+    assertThrows(AllLockersFullException.class, () -> superLockerRobot.store(new Package()));
+  }
+
+  @Test
+  void should_get_the_right_package_when_get_package_given_ticket_is_valid() {
+    // Arrange
+    List<Locker> lockers = Arrays.asList(
+        createLocker(3, 1),
+        createLocker(3, 2),
+        createLocker(3, 3));
+    SuperLockerRobot superLockerRobot = new SuperLockerRobot(lockers);
+    Package pack = new Package();
+    Ticket ticket = superLockerRobot.store(pack);
+
+    // Act
+    Package actualPack = superLockerRobot.get(ticket);
+
+    // Assert
+    assertEquals(pack, actualPack);
+  }
+
   private Locker createLocker(int capacity, int availableSpace) {
     Locker locker = new Locker(capacity);
     for(int i = 0; i < capacity - availableSpace; i++) {
