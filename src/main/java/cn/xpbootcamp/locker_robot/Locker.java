@@ -48,4 +48,8 @@ public class Locker {
   public int getAvailableSpace() {
     return capacity - storedPacks.size();
   }
+
+  public int getCapacity() {
+    return capacity;
+  }
 }
