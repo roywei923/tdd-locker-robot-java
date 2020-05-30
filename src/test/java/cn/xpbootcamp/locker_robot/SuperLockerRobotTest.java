@@ -100,6 +100,19 @@ public class SuperLockerRobotTest {
     assertEquals(pack, actualPack);
   }
 
+  @Test
+  void should_throw_InvalidTicketException_when_get_package_given_ticket_is_fake() {
+    // Arrange
+    List<Locker> lockers = Arrays.asList(
+        createLocker(5, 3),
+        createLocker(5, 3),
+        createLocker(5, 3));
+    SuperLockerRobot superLockerRobot = new SuperLockerRobot(lockers);
+
+    // Act, Assert
+    assertThrows(TicketInvalidException.class, () -> superLockerRobot.get(new Ticket()));
+  }
+
   private Locker createLocker(int capacity, int availableSpace) {
     Locker locker = new Locker(capacity);
     for(int i = 0; i < capacity - availableSpace; i++) {

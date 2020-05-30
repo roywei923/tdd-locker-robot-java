@@ -3,6 +3,7 @@ package cn.xpbootcamp.locker_robot;
 import cn.xpbootcamp.locker_robot.entity.Ticket;
 import cn.xpbootcamp.locker_robot.entity.Package;
 import cn.xpbootcamp.locker_robot.exception.AllLockersFullException;
+import cn.xpbootcamp.locker_robot.exception.TicketInvalidException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -35,6 +36,9 @@ public class SuperLockerRobot {
   }
 
   public Package get(Ticket ticket) {
+    if(!packageLockerMapping.containsKey(ticket.getPackageId())) {
+      throw new TicketInvalidException();
+    }
     Locker locker = packageLockerMapping.get(ticket.getPackageId());
     packageLockerMapping.remove(ticket.getPackageId());
     lockers.remove(locker);
