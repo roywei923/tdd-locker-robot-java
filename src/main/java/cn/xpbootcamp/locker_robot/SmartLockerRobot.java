@@ -23,13 +23,14 @@ public class SmartLockerRobot {
   }
 
   public Ticket store(Package pack) {
-    Locker locker = lockers.peek();
+    Locker locker = lockers.poll();
     if(locker.isFull()) {
       throw new AllLockersFullException();
     }
 
     Ticket ticket = locker.store(pack);
     packageLockerMapping.put(ticket.getPackageId(), locker);
+    lockers.offer(locker);
 
     return ticket;
   }
@@ -38,9 +39,11 @@ public class SmartLockerRobot {
     if(!packageLockerMapping.containsKey(ticket.getPackageId())) {
       throw new TicketInvalidException();
     }
-
-    Package pack = packageLockerMapping.get(ticket.getPackageId()).get(ticket);
+    Locker locker = packageLockerMapping.get(ticket.getPackageId());
     packageLockerMapping.remove(ticket.getPackageId());
+    lockers.remove(locker);
+    Package pack = locker.get(ticket);
+    lockers.offer(locker);
 
     return pack;
   }
